@@ -1,0 +1,13 @@
+body {
+    background-color: #578a34;
+    text-align: center
+}
+#score{
+    color: white;
+    align-items: center;
+    font-size: xx-large;
+}    
+#score_number{
+    color: white;
+    align-items: center;
+}
