@@ -1,40 +1,53 @@
-body {
-    background-color: #578a34;
-    color: #166534;
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+const grid = document.getElementById('grid');
+const scoreDisplay = document.getElementById('score');
+let squares = [];
+let currentSnake = [2, 1, 0];
+let direction = 1;
+let appleIndex = 0;
+let score = 0;
+let timerId = 0;
+let intervalTime = 200;
+function createBoard() {
+    for (let i = 0; i < 400; i++) {
+    let square = document.createElement('div');
+    grid.appendChild(square);
+    squares.push(square);
+    }
+}
+createBoard();
+startgame();
+generateApple();
+
+function startgame() {
+    currentSnake.forEach(index => squares[index].classList.remove('snake'));
+    squares[appleIndex].classList.remove('apple');
+    clearInterval(timerId);
+}
+function move() {
+    const hitbottom = (currentSnake[0] + 20 >= 400 && direction === 20);
+    const hittop = (currentSnake[0] - 20 < 0 && direction === -20);
+    const hitright = (currentSnake[0] % 20 === 19 && direction === 1);
+    const hitleft = (currentSnake[0] % 20 === 0 && direction === -1);
+    const hitself = squares[currentSnake[0] + direction]?.classList.contains('snake');
 }
 
-.game-container {
-    background: white;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    text-align: center;
+function generateApple() {
+    do {
+        appleIndex = Math.floor(Math.random() * squares.length);
+    } while (squares[appleIndex].classList.contains('snake'));
+    squares[appleIndex].classList.add('apple');
 }
 
-#grid{
-    display: grid;
-    grid-template-columns: repeat(20, 1fr);
-    width: 300px;
-    height: 300px;
-    margin: 20px auto;
-    background: #f8fafc;
-    border: 4px solid #aad751;
+function changeDir(newDir) {
+    if (direction + newDir !== 0) {
+        direction = newDir;
+    }
 }
 
-#grid div { border: 0.1px solid #aad751; }
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') changeDir(-20);
+    if (e.key === 'ArrowDown') changeDir(20);
+    if (e.key === 'ArrowLeft') changeDir(1);
+    if (e.key === 'ArrowRight') changeDir(-1);
+});
 
-.snake { background-color: #22c55e; border-radius: 2px; }
-.apple { background-color: #ef4444; border-radius: 50%; }
-
-.controls { margin: 15px 0; }
-.arrow { width: 60px; height: 60px; font-size: 24px; font-weight: bold; margin: 4px; cursor: pointer; 
-    background: #dcfce7; border: 2px solid #86efac; color: #166534; border-radius: 12px; transition: background 0.2; 
-}
-.arrow:active {background: #86efac;}
-#start-btn { padding: 12px 30px; background: #16a34a; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; }
